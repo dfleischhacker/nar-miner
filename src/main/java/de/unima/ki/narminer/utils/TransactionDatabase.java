@@ -72,6 +72,7 @@ public class TransactionDatabase {
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 
         int highestItem = 0;
+        int lowestItem = Integer.MAX_VALUE;
 
         String line;
         while ((line = reader.readLine()) != null) {
@@ -82,6 +83,10 @@ public class TransactionDatabase {
 
                 if (val > highestItem) {
                     highestItem = val;
+                }
+                
+                if (val < lowestItem) {
+                    lowestItem = val;
                 }
 
                 if (!itemLookupMap.containsKey(val)) {
@@ -393,10 +398,10 @@ public class TransactionDatabase {
     public Set<Itemset> getFrequent1Itemsets(double minsupp) {
         Set<Itemset> frequent = new HashSet<Itemset>();
 
-        int occurrenceThreshold = (int) (allItems.size() * minsupp);
+        int occurrenceThreshold = (int) (getNumberOfTransactions() * minsupp);
 
         for (Integer item : allItems) {
-            if (itemLookupMap.get(item).size() > occurrenceThreshold) {
+            if (itemLookupMap.containsKey(item) && itemLookupMap.get(item).size() > occurrenceThreshold) {
                 frequent.add(Itemset.singleton(item));
             }
         }
